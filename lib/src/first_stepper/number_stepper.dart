@@ -78,10 +78,13 @@ class NumberStepper extends StatelessWidget {
   /// Controls which `BaseStepper` constructor to call.
   final bool _isExternallyControlled;
 
+  final bool spaceBetweenForHorizontal;
+
   /// Used when the stepper is controlled externally using the `goNext` and `goPrevious` properties. In which case, two variables must be maintained in a StatefulWidget to set the values of `gotNext` and `goPrevious` in a call to `setState()`, and if the stepping is moving foward `gotNext` must be set to true and `goPrevious` must be set to `false`. If moving backward `goPrevious` must be set to `true` and `goNext` must be set to `false`.
   ///
   /// For more information, see example [here](https://pub.dev/packages/im_stepper/example).
   NumberStepper.externallyControlled({
+    this.spaceBetweenForHorizontal: false,
     this.numbers,
     this.direction = Axis.horizontal,
     this.numberStyle = const TextStyle(color: Colors.black),
@@ -110,6 +113,7 @@ class NumberStepper extends StatelessWidget {
 
   /// Used when the stepping is controller either by using the built-in next/previous buttons or by tapping. If stepping needs to be controlled externally then using the `BaseStepper.externallyControlled` constructor is a more optimized approach.
   NumberStepper({
+    this.spaceBetweenForHorizontal: false,
     this.numbers,
     this.enableNextPreviousButtons = true,
     this.enableStepTapping = true,
@@ -140,6 +144,7 @@ class NumberStepper extends StatelessWidget {
   Widget build(BuildContext context) {
     return _isExternallyControlled
         ? BaseStepper.externallyControlled(
+            spaceBetweenForHorizontal: spaceBetweenForHorizontal,
             children: _numbersWrappedInText(),
             direction: direction,
             stepColor: stepColor,
@@ -160,6 +165,7 @@ class NumberStepper extends StatelessWidget {
             goPrevious: goPrevious,
           )
         : BaseStepper(
+            spaceBetweenForHorizontal: spaceBetweenForHorizontal,
             children: _numbersWrappedInText(),
             enableNextPreviousButtons: enableNextPreviousButtons,
             enableStepTapping: enableStepTapping,

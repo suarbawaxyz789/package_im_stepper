@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:im_stepper/src/first_stepper/custom_line.dart';
 
 import 'base_indicator.dart';
 import '../custom_paint/dotted_line.dart';
@@ -76,10 +77,13 @@ class BaseStepper extends StatefulWidget {
   /// Whether to disable scrolling or not.
   final scrollingDisabled;
 
+  final bool spaceBetweenForHorizontal;
+
   /// Used when the stepper is controlled externally using the `goNext` and `goPrevious` properties. In which case, two variables must be maintained in a StatefulWidget to set the values of `gotNext` and `goPrevious` in a call to `setState()`, and if the stepping is moving foward `gotNext` must be set to true and `goPrevious` must be set to `false`. If moving backward `goPrevious` must be set to `true` and `goNext` must be set to `false`.
   ///
   /// For more information, see example [here](https://pub.dev/packages/im_stepper/example).
   BaseStepper.externallyControlled({
+    this.spaceBetweenForHorizontal,
     this.children,
     this.direction = Axis.horizontal,
     this.stepColor,
@@ -115,6 +119,7 @@ class BaseStepper extends StatefulWidget {
 
   /// Used when the stepping is controller either by using the built-in next/previous buttons or by tapping. If stepping needs to be controlled externally then using the `BaseStepper.externallyControlled` constructor is a more optimized approach.
   BaseStepper({
+    this.spaceBetweenForHorizontal: false,
     this.children,
     this.enableNextPreviousButtons = true,
     this.enableStepTapping = true,
@@ -166,7 +171,9 @@ class _BaseStepperState extends State<BaseStepper> {
   void initState() {
     super.initState();
     _selectedIndex = 0;
-    this._scrollController = ScrollController();
+    if (!widget.spaceBetweenForHorizontal) {
+      this._scrollController = ScrollController();
+    }
   }
 
   @override
@@ -185,7 +192,9 @@ class _BaseStepperState extends State<BaseStepper> {
   @override
   void dispose() {
     super.dispose();
-    _scrollController.dispose();
+    if (!widget.spaceBetweenForHorizontal) {
+      _scrollController.dispose();
+    }
   }
 
   /// Controls the step scrolling.
@@ -204,7 +213,9 @@ class _BaseStepperState extends State<BaseStepper> {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
+    if (!widget.spaceBetweenForHorizontal) {
+      WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
+    }
 
     return widget.direction == Axis.horizontal
         ? Row(
@@ -233,6 +244,12 @@ class _BaseStepperState extends State<BaseStepper> {
 
   /// Builds the stepper.
   Widget _stepperBuilder() {
+    if (widget.spaceBetweenForHorizontal) {
+      return Row(
+        children: _buildSteps(),
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      );
+    }
     return SingleChildScrollView(
       scrollDirection: widget.direction,
       controller: _scrollController,
@@ -253,11 +270,14 @@ class _BaseStepperState extends State<BaseStepper> {
       widget.children.length,
       (index) {
         return widget.direction == Axis.horizontal
-            ? Row(
-                children: <Widget>[
-                  _customizedIndicator(index),
-                  _customizedDottedLine(index, Axis.horizontal),
-                ],
+            ? Expanded(
+                child: Row(
+                  children: <Widget>[
+                    _customizedIndicator(index),
+                    Expanded(child: _customLine(index, Axis.horizontal)),
+                    // _customizedDottedLine(index, Axis.horizontal),
+                  ],
+                ),
               )
             : Column(
                 children: <Widget>[
@@ -273,7 +293,7 @@ class _BaseStepperState extends State<BaseStepper> {
   Widget _customizedIndicator(int index) {
     return BaseIndicator(
       child: widget.children[index],
-      isSelected: _selectedIndex == index,
+      isSelected: _selectedIndex >= index,
       onPressed: widget.enableStepTapping
           ? () {
               if (widget.steppingEnabled) {
@@ -306,6 +326,15 @@ class _BaseStepperState extends State<BaseStepper> {
             dotRadius: widget.lineDotRadius ?? 1.0,
             spacing: 5.0,
             axis: axis,
+          )
+        : Container();
+  }
+
+  /// A customized DottedLine.
+  Widget _customLine(int index, Axis axis) {
+    return index < widget.children.length - 1
+        ? CustomLine(
+            isSelected: _selectedIndex > index,
           )
         : Container();
   }

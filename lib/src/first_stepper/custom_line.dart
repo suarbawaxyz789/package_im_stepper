@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'opacity_animated.dart';
 
-class BaseIndicator extends StatelessWidget {
+class CustomLine extends StatelessWidget {
   /// Whether this indicator is selected or not.
   final bool isSelected;
 
@@ -33,7 +33,7 @@ class BaseIndicator extends StatelessWidget {
   /// The amount of margin around each side of the indicator.
   final double margin;
 
-  BaseIndicator({
+  CustomLine({
     this.isSelected = false,
     this.child,
     this.onPressed,
@@ -53,6 +53,7 @@ class BaseIndicator extends StatelessWidget {
       child: Container(
         padding: isSelected ? EdgeInsets.all(margin) : EdgeInsets.all(margin),
         decoration: BoxDecoration(
+          color: isSelected ? Colors.blue : Colors.grey,
           border: isSelected
               ? Border.all(
                   color: activeBorderColor ?? Colors.blue,
@@ -62,28 +63,10 @@ class BaseIndicator extends StatelessWidget {
                   color: Colors.grey,
                   width: activeBorderWidth,
                 ),
-          shape: BoxShape.circle,
+          // shape: BoxShape.circle,
         ),
-        child: InkWell(
-          onTap: onPressed,
-          child: OpacityAnimated(
-            animationDisabled: !isSelected,
-            child: Container(
-              height: radius * 2,
-              width: radius * 2,
-              padding: EdgeInsets.all(padding),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? activeColor ?? Colors.green
-                    : color ?? Colors.grey,
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: child,
-              ),
-            ),
-          ),
-        ),
+        height: 8,
+        // width: double.infinity,
       ),
     );
   }
