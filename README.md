@@ -6,34 +6,37 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/imujtaba8488/package_im_stepper)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/imujtaba8488/package_im_stepper)
 
-## Publications
-
-Here's a collection of articles, examples, posts, etc. about im_stepper. If you find another one please let me know.
-
-* Medium Article with `IconStepper` Example: [Beautiful Page Indicators and Steppers with the im_stepper package](https://imujtaba8488.medium.com/beautiful-page-indicators-and-steppers-with-the-im-stepper-package-8c091cf5364e).
-
 ## Recent Changes
 
-Here's a list of some important changes in version: 0.1.2+6. For a complete list of changes see changelog [here](https://pub.dev/packages/im_stepper/changelog).
+Here's a list of some important changes in version: __0.1.2+9__. For a complete list of changes see changelog [here](https://pub.dev/packages/im_stepper/changelog).
 
-* BugFix - ticker disposed with active ticker. [count: 2]
+* Introducing revamped DotStepper
+
+![Revamped DotStepper](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/others/3ways_to_control.gif)
+
+* `DotStepper` has been completely revamped to support controlling the stepper in multiple ways. New features such as line-connectors, spacing between dots, modern indicator effects, new dot shapes, etc. have been added. However, following __breaking changes__ happened along the way.
+
+* `DotStepper` __Breaking Changes__:
+
+  * `activeStep` now starts from 0 and __NOT__ from 1. Maximum `activeStep` is therefore now `dotCount` - 1.
+  
+  * `lowerBound` and `upperBound` have been removed.
+
+  * Please update your code! See examples __[here](https://pub.dev/packages/im_stepper/example)__.
+
+* __Future Breaking Changes__: `goNext`, `goPrevious`, and `Foo.externallyControlled` properties and constructors have been _deprecated_ and will be removed from Icon, Image, Number Steppers in version __0.1.3__.
 
 ## About
 
-A growing collection of widgets primarily used to step-through various
-steps/widgets or used as page indicators in an application.
+A growing collection of stepper and page indicator widgets.
 
 ## Description
 
-A number of applications require to show steps to its users, for example, an app
-surveying its users require to display the step that the user is on while the
-user is filling up the survey form. This is where im_stepper comes into play
-with easy to use stepper widgets that may find its uses in myriad applications.
-
-Simply import `package:im_stepper/stepper.dart` and choose any of the following
-steppers appropriate for your application:-
+The stepper widgets help you to show or collect information from users using organized steps. The page indicator widgets allow you to visually notify users about their current position as they scroll through a group of pages.
 
 ## Table of Contents
+
+* [General Guidelines](#general-guidelines)
 
 * [IconStepper](#iconstepper)
 
@@ -43,101 +46,102 @@ steppers appropriate for your application:-
 
 * [NumberStepper](#numberstepper)
 
+* [Publications](#publications)
+
 * [Feedback](#feedback)
+
+* [Connect with me](#connect-with-me)
 
 * [Please Support](#please-support)
 
+## General Guidelines
+
+* Simply import `package:im_stepper/stepper.dart`.
+
+* __Important:__ The `direction` argument controls whether the stepper is displayed horizontally or vertically. A horizontal IconStepper can be wrapped within a Column with no issues. However, if wrapped within a row, it _must also be_ wrapped within the built-in _Expanded_ widget. The same applies to the vertical IconStepper.
+
+* __Validation:__ To enable validation before the next step is reached, set the `steppingEnabled` property to an appropriate value in a `StatefulWidget`.
+
+* __Controlling Steppers:__ All steppers are controlled using the `activeStep` property. You can control a stepper by:-
+
+  * using the built-in next and previous buttons. __Note:__ DotStepper does not have built-in next and previous buttons.
+
+  * tapping individual steps.
+
+  * using external buttons or events.
+
+    * See examples __[here](https://pub.dev/packages/im_stepper/example)__.
+
+* To customize the color, border, etc., wrap a stepper widget inside a `Container` and specify it's `decoration` argument.
+
 ## IconStepper
 
-A simple to use icon stepper widget, wherein, each icon defines a step. Hence,
-total number of icons define total number of steps. Primarily designed to show
-steps as icons.
+Simple to use icon stepper widget, wherein each icon defines a step. Hence, the total number of icons represents the total number of available steps. [See Example](https://pub.dev/packages/im_stepper/example).
 
-![IconStepper](https://github.com/imujtaba8488/showcase/blob/master/icon_stepper_05.gif)
-
-### IconStepper - Usage Note
-
-* __Important:__ IconStepper `direction` argument controls whether the stepper is displayed
-horizontally or vertically. A horizontal IconStepper can be wrapped within a Column
-with no issues, however, if wrapped within a row it _must also be_ wrapped within
-the built-in _Expanded_ widget. Same applies for the vertical IconStepper.
-
-* IconStepper fires the `onStepReached(int index)` callback, which provides
-the index of the Step that is reached. This callback can be used to control the
-widget that appears when a certain step is reached.
-
-* To customize the color, border, etc. of an IconStepper, simply wrap it inside
-a Container and specify the `decoration` argument.
-
-* To enable validation before the next step is reached, set the `steppingEnabled`
-property to an appropriate value in a `StatefulWidget`.
-
-* Github issues [#3](https://github.com/imujtaba8488/package_im_stepper/issues/3) and [#4](https://github.com/imujtaba8488/package_im_stepper/issues/3) stand resolved. To control the IconStepper, ImageStepper, or the NumberStepper by using buttons etc from outside the stepper, use the `Foo.externallyControlled()` constructor and call `goNext` and `goPrevious` controlled by two variables in a `StatefulWidget` within a `setState` call. For further information see example [here](https://pub.dev/packages/im_stepper/example)
+![IconStepper](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/landing/icon_stepper.gif)
 
 ## ImageStepper
 
-A simple to use image stepper widget, wherein, each image defines a step. Hence,
-total number of images define total number of steps. Primarily designed to show
-steps as images.
+Simple to use image stepper widget, wherein each image defines a step. Hence, the total number of images represents the total number of steps. [See Example](https://pub.dev/packages/im_stepper/example).
 
-![ImageStepper](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/image_stepper_02.gif)
-
-### ImageStepper - Usage Note
-
-* [Usage Note](#iconstepper---usage-note) - See IconStepper Usage Note.
-
-## DotStepper
-
-A simple and smooth dot stepper widget with built-in animations. Each dot in a
-DotStepper represents a step.
-
-## Available Shapes
-
- **Shapes**        | **Demo**
--------------------|------------
- Circle            |![Circle](https://github.com/imujtaba8488/showcase/blob/master/dot_stepper_circle.png)
- Square            |![Square](https://github.com/imujtaba8488/showcase/blob/master/dot_stepper_square.png)
- Rounded Rectangle |![RR](https://github.com/imujtaba8488/showcase/blob/master/dot_stepper_rounded_rectangle.png)
- Line              |![Line](https://github.com/imujtaba8488/showcase/blob/master/dot_stepper_line.png)
-
-## Available Effects
-
- **Effect** | **Demo**
-------------|----------------
- Trail      |![Trail](https://github.com/imujtaba8488/showcase/blob/master/dot_stepper_trail.gif)
- Slide      |![Slide](https://github.com/imujtaba8488/showcase/blob/master/dot_stepper_slide.gif)
- Magnify    |![Magnify](https://github.com/imujtaba8488/showcase/blob/master/dot_stepper_magnify.gif)
- Worm       |![Worm](https://github.com/imujtaba8488/showcase/blob/master/dot_stepper_worm.gif)
- Flat       |![Flat](https://github.com/imujtaba8488/showcase/blob/master/dot_stepper_flat.gif)
- Bullet     |![Bullet](https://github.com/imujtaba8488/showcase/blob/master/dot_stepper_bullet.gif)
- Jump       |![Jump](https://github.com/imujtaba8488/showcase/blob/master/dot_stepper_jump.gif)
-
-### DotStepper - Usage Note
-
-* __Important:__ It is important that a call to `goNext` and `goPrevious` is
-controlled by two variables in a `StatefulWidget` with a call to `setState` in
-order for the DotStepper to work. __Please look at the Example.__
+![ImageStepper](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/landing/image_stepper.gif)
 
 ## NumberStepper
 
-A simple to use number stepper widget, wherein, each number defines a step. Hence,
-total count of numbers define total number of steps. Primarily designed to show
-steps as numbers.
+A simple to use number stepper widget, wherein each number defines a step. Hence, the total count of numbers represents the total number of steps. [See Example](https://pub.dev/packages/im_stepper/example).
 
-![ImageStepper](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/number_stepper_01.gif)
+![ImageStepper](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/landing/number_stepper.gif)
 
-### NumberStepper - Usage Note
+## DotStepper
 
-* [Usage Note](#iconstepper---usage-note) - See IconStepper Usage Note.
+A family of fully customizable, beautiful page indicator widgets with awesome built-in animations. Each dot in a DotStepper represents a step. Supports resizing the dots, managing spacing between dots, enabling lineConnectors, customizing with decorations, etc. [See Example](https://pub.dev/packages/im_stepper/example).
+
+## Shapes
+
+ **Shapes**        | **Demo**
+-------------------|------------
+ Circle            |![Circle](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/shapes/circle.png)
+ Square            |![Square](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/shapes/square.png)
+ Rectangle         |![Rect](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/shapes/rectangle.png)
+ Squircle          |![Squircle](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/shapes/squircle.png)
+ Stadium           |![Stadium](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/shapes/stadium.png)
+ Pipe              |![Pipe](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/shapes/pipe.png)
+ Pipe2             |![Pipe2](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/shapes/pipe2.png)
+
+## Effects
+
+ **Effect**      | **Demo**
+-----------------|----------------
+ Blink           |![Blink](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/effects/blink.gif)
+ Jump            |![Jump](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/effects/jump.gif)
+ Magnify         |![Magnify](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/effects/magnify.gif)
+ Shift           |![Shift](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/effects/shift.gif)
+ Shrink          |![Shrink](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/effects/shrink.gif)
+ Slide           |![Slide](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/effects/slide.gif)
+ Thump           |![Thump](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/effects/thump.gif)
+ Worm            |![Worm](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/effects/worm.gif)
+
+## Publications
+
+Here's a collection of articles, examples, posts, etc., about im_stepper. If you find another one please let me know.
+
+* Medium Article with `IconStepper` Example: [Beautiful Page Indicators and Steppers with the im_stepper package](https://imujtaba8488.medium.com/beautiful-page-indicators-and-steppers-with-the-im-stepper-package-8c091cf5364e). __Note:__ A new way of controlling the steppers has been introduced in version 0.1.2+8. The article will be updated shorty. For now, please see examples.
+
+* Interested in reading a book or watching a video on effectively using the im_stepper package in your Flutter Apps? __[Vote here!](https://forms.gle/rQqpARMTAcCCNE9V8)__
 
 ## Feedback
 
-For any feedback please file an issue
-__[here](https://github.com/imujtaba8488/package_im_stepper/issues).__
+* Please file an issue __[here](https://github.com/imujtaba8488/package_im_stepper/issues).__
 
-![Like](https://github.com/imujtaba8488/showcase/blob/master/thumbs_up.png) Please __Like__ to __support__!
+* For more information please send me an email or connect with me.
+
+## Connect with me
+
+[![GitHub](https://github.com/imujtaba8488/showcase/blob/master/icons/github_64px%20b:w.png)](https://github.com/imujtaba8488) [![Twitter](https://github.com/imujtaba8488/showcase/blob/master/icons/twitter_64px%20b:w.png)](https://twitter.com/imujtaba8488)  [![LinkedIn](https://github.com/imujtaba8488/showcase/blob/master/icons/linkedin_64px%20b:w.png)](https://www.linkedin.com/in/imujtaba8488/)  [![Medium](https://github.com/imujtaba8488/showcase/blob/master/icons/medium_64px%20b:w.png)](https://imujtaba8488.medium.com)  [![Instagram](https://github.com/imujtaba8488/showcase/blob/master/icons/insta_64px%20b:w.png)](https://www.instagram.com/imujtaba8488/)  [![Facebook](https://github.com/imujtaba8488/showcase/blob/master/icons/fb_64px%20b:w.png)](https://www.facebook.com/imujtaba8488/)
 
 ## Please Support
+
+* ![Like](https://github.com/imujtaba8488/showcase/blob/master/icons/thumbs_up.png) Please __Like__ to __support__!
 
 * [Become a Patron](https://www.patreon.com/imujtaba8488)
 

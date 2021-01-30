@@ -75,6 +75,12 @@ class NumberStepper extends StatelessWidget {
   /// Whether the scrolling is disabled or not.
   final bool scrollingDisabled;
 
+  /// The currently active step.
+  final int activeStep;
+
+  /// Callback, provides the upper bound value.
+  final Bound upperBound;
+
   /// Controls which `BaseStepper` constructor to call.
   final bool _isExternallyControlled;
 
@@ -83,6 +89,9 @@ class NumberStepper extends StatelessWidget {
   /// Used when the stepper is controlled externally using the `goNext` and `goPrevious` properties. In which case, two variables must be maintained in a StatefulWidget to set the values of `gotNext` and `goPrevious` in a call to `setState()`, and if the stepping is moving foward `gotNext` must be set to true and `goPrevious` must be set to `false`. If moving backward `goPrevious` must be set to `true` and `goNext` must be set to `false`.
   ///
   /// For more information, see example [here](https://pub.dev/packages/im_stepper/example).
+  @Deprecated(
+    'Scheduled to be removed in version 0.1.3. Please consider using the activeStep instead. For more information, see examples on https://pub.dev/packages/im_stepper/example',
+  )
   NumberStepper.externallyControlled({
     this.spaceBetweenForHorizontal: false,
     this.numbers,
@@ -104,6 +113,8 @@ class NumberStepper extends StatelessWidget {
     this.goNext,
     this.goPrevious,
     this.scrollingDisabled = false,
+    this.activeStep = 0,
+    this.upperBound,
   })  : this.enableNextPreviousButtons = false,
         this.enableStepTapping = false,
         this.previousButtonIcon = null,
@@ -136,6 +147,8 @@ class NumberStepper extends StatelessWidget {
     this.stepReachedAnimationDuration = const Duration(seconds: 1),
     this.steppingEnabled = true,
     this.scrollingDisabled = false,
+    this.activeStep = 0,
+    this.upperBound,
   })  : _isExternallyControlled = false,
         this.goNext = false,
         this.goPrevious = false;
@@ -163,6 +176,8 @@ class NumberStepper extends StatelessWidget {
             scrollingDisabled: scrollingDisabled,
             goNext: goNext,
             goPrevious: goPrevious,
+            activeStep: activeStep,
+            upperBound: upperBound,
           )
         : BaseStepper(
             spaceBetweenForHorizontal: spaceBetweenForHorizontal,
@@ -187,6 +202,8 @@ class NumberStepper extends StatelessWidget {
             margin: activeStepBorderPadding,
             padding: stepPadding,
             scrollingDisabled: scrollingDisabled,
+            activeStep: activeStep,
+            upperBound: upperBound,
           );
   }
 

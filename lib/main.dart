@@ -2,134 +2,121 @@ import 'package:flutter/material.dart';
 
 import 'stepper.dart';
 
-void main() {
-  runApp(IconStepperDemo());
-}
+void main() => runApp(DotStepperDemo());
 
-class IconStepperDemo extends StatefulWidget {
+class DotStepperDemo extends StatefulWidget {
   @override
-  _IconStepperDemo createState() => _IconStepperDemo();
+  _DotStepperDemo createState() => _DotStepperDemo();
 }
 
-class _IconStepperDemo extends State<IconStepperDemo> {
-  // MUST BE MAINTAINED, SEPARATELY.
-  int currentIndex = 0;
+class _DotStepperDemo extends State<DotStepperDemo> {
+  // REQUIRED: USED TO CONTROL THE STEPPER.
+  int activeStep = 0; // Initial step set to 5.
 
-  // THESE MUST BE USED TO CONTROL THE STEPPER FROM EXTERNALLY.
-  bool goNext = false;
-  bool goPrevious = false;
+  // OPTIONAL: can be set directly.
+  int dotCount = 5;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Icon Stepper Example'),
+          title: Text('3 Ways to Control'),
         ),
-        body: Column(
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.blueGrey,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    spreadRadius: 1.0,
-                    blurRadius: 2.0,
-                  )
-                ],
-                // borderRadius: BorderRadius.circular(5.0),
-              ),
-              child: IconStepper.externallyControlled(
-                goNext: goNext,
-                goPrevious: goPrevious,
-                direction: Axis.horizontal,
-                stepColor: Colors.white,
-                activeStepColor: Colors.amber,
-                lineColor: Colors.amberAccent,
-                lineLength: 75,
-                steppingEnabled: true,
-                icons: [
-                  Icon(Icons.home),
-                  Icon(Icons.person),
-                  Icon(Icons.account_balance),
-                  Icon(Icons.access_time),
-                ],
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(width: 0.1),
-              ),
-              padding: EdgeInsets.all(8.0),
-              alignment: Alignment.centerLeft,
-              child: Text(header()),
-            ),
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.all(5.0),
-                child: FittedBox(
-                  child: Center(
-                    child: Text('${currentIndex + 1}'),
-                  ),
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                RaisedButton(
-                  onPressed: () {
-                    // MUST TO CONTROL STEPPER FROM EXTERNAL BUTTONS.
-                    setState(() {
-                      goNext = false;
-                      goPrevious = true;
+        body: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            children: [
+              DotStepper(
+                // direction: Axis.vertical,
+                dotCount: dotCount,
+                dotRadius: 20,
+                // lineConnectorsEnabled: true,
 
-                      if (currentIndex > 0) {
-                        currentIndex--;
-                      }
-                    });
-                  },
-                  child: Text('Previous'),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    // MUST TO CONTROL STEPPER FROM EXTERNAL BUTTONS.
-                    setState(() {
-                      goNext = true;
-                      goPrevious = false;
+                /// THIS MUST BE SET. SEE HOW IT IS CHANGED IN NEXT/PREVIOUS BUTTONS AND JUMP BUTTONS.
+                activeStep: activeStep,
+                shape: Shape.circle,
+                spacing: 30,
+                indicator: Indicator.worm,
 
-                      if (currentIndex < 3) {
-                        currentIndex++;
-                      }
-                    });
-                  },
-                  child: Text('Next'),
-                ),
-              ],
-            )
-          ],
+                /// TAPPING WILL NOT FUNCTION PROPERLY WITHOUT THIS PIECE OF CODE.
+                onDotTapped: (tappedDotIndex) {
+                  setState(() {
+                    activeStep = tappedDotIndex;
+                  });
+                },
+
+                // DOT-STEPPER DECORATIONS
+                // fixedDotDecoration: FixedDotDecoration(
+                //   // strokeColor: Colors.green,
+                //   // strokeWidth: 19,
+                // ),
+                // indicatorDecoration: IndicatorDecoration(
+                //   color: Colors.black,
+                // ),
+                lineConnectorDecoration:
+                    LineConnectorDecoration(color: Colors.grey, strokeWidth: 5),
+              ),
+
+              /// Jump buttons.
+              Padding(padding: const EdgeInsets.all(18.0), child: steps()),
+
+              // Next and Previous buttons.
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [previousButton(), nextButton()],
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 
-  String header() {
-    switch (currentIndex) {
-      case 0:
-        return 'Educational Background';
+  /// Generates jump steps for dotCount number of steps, and returns them in a row.
+  Row steps() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: List.generate(dotCount, (index) {
+        return ElevatedButton(
+          child: Text('${index + 1}'),
+          onPressed: () {
+            setState(() {
+              activeStep = index;
+            });
+          },
+        );
+      }),
+    );
+  }
 
-      case 1:
-        return 'Professional Background';
+  /// Returns the next button widget.
+  Widget nextButton() {
+    return ElevatedButton(
+      child: Text('Next'),
+      onPressed: () {
+        /// ACTIVE STEP MUST BE CHECKED FOR (dotCount - 1) AND NOT FOR dotCount TO PREVENT Overflow ERROR.
+        if (activeStep < dotCount - 1) {
+          setState(() {
+            activeStep++;
+          });
+        }
+      },
+    );
+  }
 
-      case 2:
-        return 'Awards';
-
-      case 3:
-        return 'Sports';
-
-      default:
-        return 'Unknown';
-    }
+  /// Returns the previous button widget.
+  Widget previousButton() {
+    return ElevatedButton(
+      child: Text('Prev'),
+      onPressed: () {
+        if (activeStep > 0) {
+          setState(() {
+            activeStep--;
+          });
+        }
+      },
+    );
   }
 }

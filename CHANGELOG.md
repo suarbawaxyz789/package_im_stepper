@@ -1,12 +1,73 @@
 # ChangeLog
 
+## 0.1.2+9 [DotStepper Revamped]
+
+### Thursday, 8th January, 2021
+
+The DotStepper has been completely revamped to include several new exciting features, such as, setting spacing between dots (github issue), showing line connectors, etc. Modern indicator effects and shapes have also been added. However, some of the following breaking changes happened along the way:-
+
+* __Breaking Change:__ Indicator effect such as `bullet`, `trail`, `jump_form_above`, and `jump_from_below` have been removed and new modern effects have been introduced.
+
+* __Breaking Change:__ Following properties have either been removed, moved or renamed to make controlling and customizing the `DotStepper` a breeze:-
+  
+| __Property__      | __Removed__ | __Renamed__   | __Moved__   |
+|-------------------|-------------|---------------|-------------|
+| `goNext`          | Yes         | \-            | \-          |
+| `goPrevious`      | Yes         | \-            | \-          |
+| `upperBound`      | Yes         | \-            | \-          |
+| `lowerBound`      | Yes         | \-            | \-          |
+| `dotReachedIndex` | \-          | `onDotTapped` | \-          |
+| `dotColor`        | \-          | \-            | Decorations |
+| `indicatorColor`  | \-          | \-            | Decorations |
+| `fillStep`        | \-          | \-            | Decorations |
+| `indicatorEffect` | \-          | `Indicator`   | \-          |
+| `indicatorType`   | Yes         | \-            | \-          |
+| `dotShape`        | \-          | `shape`       | \-          |
+
+* Following new properties have been added:-
+
+| **Property**              | **Description**                                  |
+|---------------------------|--------------------------------------------------|
+| `spacing`                 | Sets the spacing between dots                    |
+| `lineConnectorsEnabled`   | Enables or disables line connectors between dots |
+| `tappingEnabled`          | Enables or disables tapping on dots              |
+| `fixedDotDecoration`      | Decorates fixedDots                              |
+| `indicatorDecoration`     | Decorates the indicator                          |
+| `lineConnectorDecoration` | Decorates the lineConnectors between dots        |
+
+* LineConnectors have been added.
+
+* Spacing can now be set between the dots @github issues [11](https://github.com/imujtaba8488/package_im_stepper/issues/11).
+
+* Documentation improvements.
+
+* Many thanks to [Elliot](https://github.com/zelliot) for his continuous support.
+
+## 0.1.2+8
+
+### Saturday, 28th November, 2020
+
+* __Breaking Change:__ The DotShape property __`line`__ renamed to __`dash`__.
+
+* `goNext`, `goPrevious`, and `Foo.externallyControlled` properties and constructors deprecated and __will be removed in version 0.1.3__ from Icon, Image, Number, and Dot Steppers. Instead, introduced the `activeStep` property, a __simpler__ approach to control the steppers either from built-in buttons, by tapping, or from external buttons. @github issues: [#5](https://github.com/imujtaba8488/package_im_stepper/issues/5), [#9](https://github.com/imujtaba8488/package_im_stepper/issues/9).
+
+* The `activeStep` can also be used to either set the initial step or jump to any step. @github issues: [#7](https://github.com/imujtaba8488/package_im_stepper/issues/7)
+
+* Deprecated the `dotReachedIndex` property in the DotStepper. This function is now redundant as the same can be tracked using the `activeStep` property.
+
+* Two new function properties introduced in DotStepper; `lowerBound` and `upperBound`. These maybe required in conditionals to control stepping forward and backward using the `activeStep`.
+
+* __BugFix:__ Previous button icon not working @github issue: [#8](https://github.com/imujtaba8488/package_im_stepper/issues/8)
+
+* Updated the documentation.
+
+* Many thanks to: [elliot](https://github.com/zelliot), [MastPollo10](https://github.com/Mastpollo10), [atul-khemka](https://github.com/atul-khemka), and [thfr69](https://github.com/thfr69)
+
 ## 0.1.2+6
 
 ### Thursday, 15th October, 2020
 
 * __BugFix:__ FlutterError (_OpacityAnimatedState#aa454(ticker active) was disposed with an active Ticker, [pull request](https://github.com/imujtaba8488/package_im_stepper/pull/6) by [mattbreeland](https://github.com/mattbreeland)
-
----
 
 ## 0.1.2+5
 
@@ -22,15 +83,11 @@
 
 * Documentation improvements.
 
----
-
 ## 0.1.2+4
 
 ### Saturday, 29th August, 2020
 
 * Added NumberStepper.
-
----
 
 ## 0.1.2+3
 
@@ -44,15 +101,11 @@
 
 * Updated the examples.
 
----
-
 ## 0.1.2+2
 
 ### Wednesday, 19th August, 2020
 
 * Added Dot Shapes to DotStepper.
-
----
 
 ## 0.1.2+1
 
@@ -60,8 +113,6 @@
 
 * Added DotStepper.
 * Added example for DotStepper
-
----
 
 ## 0.1.1
 
@@ -74,8 +125,6 @@ vertical mode.
 before the next step is reached. Thanks @ Mohamed Elyamani
 
 * Refactored & optimized the code.
-
----
 
 ## 0.1.0
 

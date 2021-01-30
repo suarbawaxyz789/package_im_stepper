@@ -2,155 +2,50 @@
 
 - [IconStepper](#iconstepper)
 
-- [IconStepper Externally Controlled](#iconstepper-externally-controlled)
-
-- [DotStepper](#dotstepper)
-
 - [ImageStepper](#imagestepper)
 
 - [NumberStepper](#numberstepper)
 
+- [DotStepper](#dotstepper)
+
+- [DotStepper Customizations](#dotstepper-customizations)
+
 ## IconStepper
+
+Simple to use icon stepper widget, wherein each icon defines a step. Hence, the total number of icons represents the total number of available steps. The example below builds the following `IconStepper`:
+
+![IconStepper](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/examples/icon_stepper.gif)
+
+### Three ways to control the steppers, using:-
+
+- build-in next / previous buttons.
+
+- external next / previous buttons or events.
+
+- step-tapping.
+
+In the above `IconStepper,` we have a total of __7__ steps (represented by 7 icons) separated by dotted lines. The built-in next and previous buttons, the buttons along the bottom, and tapping an individual step, all control the stepping in this specific example. Each step's content i.e. header, and the page content, as well as the dotted line separator, next and previous buttons, etc., are fully all customizable.
+
+### Code Explanation
+
+In the following code snippet, we must define two variables: `activeStep` and `upperBound` to control the stepper. The `activeStep` is assigned to the `activeStep` property of the stepper. The `upperBound` _variable_ __receives__ its value from the `upperBound` _function_ of the stepper.
+
+Following the `build()` method, we define the next and previous buttons which control the stepper externally. The next and previous buttons increment and decrement the `activeStep` variable, respectively. However, the incrementing and decrementing is constrained by the `upperBound` and the `if` statement for lowerBound, which is a __must__ for the stepper to function properly from external Buttons.
+
+Another way to control the stepper is by enabling the built-in buttons. When the built-in buttons are tapped, they fire the `onStepReached(index)` callback, which provides the `index` of the step reached. This is where you can add logic for what to display when a specific step is reached.
+
+The last way to control the stepper is by enabling the `stepTapping` property. Like built-in buttons, it also fires the `onStepReached(index)` callback. However, observe in the code below that it sets the `activeStep` to the step's `index`.
+
+### Things to remember
+
+- You can set the initial step to any valid value, i.e., values must range from __0__ to __`upperBound`__.
+
+- `activeStep` can also be used to jump around different steps.
+
+### Code
 
 ```dart
 import 'package:flutter/material.dart';
-
-import 'package:im_stepper/stepper.dart';
-
-void main() {
-  runApp(IconStepperDemo());
-}
-
-class MyApp extends StatefulWidget {
-  @override
-  _IconStepperDemo createState() => _IconStepperDemo();
-}
-
-class _IconStepperDemo extends State<IconStepperDemo> {
-  int selectedIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Icon Stepper Example'),
-        ),
-        body: Row(
-          children: <Widget>[
-            Container(
-              // margin: EdgeInsets.all(5.0),
-              decoration: BoxDecoration(
-                color: Colors.blueGrey,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    spreadRadius: 1.0,
-                    blurRadius: 2.0,
-                  )
-                ],
-                // borderRadius: BorderRadius.circular(5.0),
-              ),
-              child: IconStepper(
-                direction: Axis.vertical,
-                // enableNextPreviousButtons: false,
-                stepColor: Colors.white,
-                activeStepColor: Colors.amber,
-                lineColor: Colors.amberAccent,
-                // lineDotRadius: 2,
-                lineLength: 75,
-                onStepReached: (value) {
-                  setState(() {
-                    print('value: $value');
-                    selectedIndex = value;
-                  });
-                },
-                steppingEnabled: true,
-                icons: [
-                  Icon(Icons.home),
-                  Icon(Icons.person),
-                  Icon(Icons.account_balance),
-                  Icon(Icons.access_time),
-                  Icon(Icons.dashboard),
-                  Icon(Icons.cached),
-                  Icon(Icons.unarchive),
-                  Icon(Icons.backspace),
-                  Icon(Icons.backup),
-                  Icon(Icons.battery_unknown),
-                  Icon(Icons.cake),
-                  Icon(Icons.call),
-                  Icon(Icons.call_end),
-                  Icon(Icons.block),
-                  Icon(Icons.mail),
-                  Icon(Icons.face),
-                  Icon(Icons.fast_forward),
-                  Icon(Icons.gamepad),
-                ],
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(width: 0.1),
-              ),
-              padding: EdgeInsets.all(8.0),
-              alignment: Alignment.centerLeft,
-              child: Text(header()),
-            ),
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.all(5.0),
-                child: FittedBox(
-                  child: Center(
-                    child: Text('${selectedIndex + 1}'),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String header() {
-    switch (selectedIndex) {
-      case 0:
-        return 'Educational Background';
-
-      case 1:
-        return 'Professional Background';
-
-      case 2:
-        return 'Awards';
-
-      case 3:
-        return 'Sports';
-
-      case 4:
-        return 'Specially abled';
-
-      case 5:
-        return 'Personal Details';
-
-      case 6:
-        return 'Social Details';
-
-      case 7:
-        return 'Review';
-
-      default:
-        return 'Unknown';
-    }
-  }
-}
-```
-
-## IconStepper-Externally Controlled
-
-When the IconStepper requires to be controlled from external buttons rather than the built-in next/previous buttons or the stepTapping itself, then `IconStepper.externallyControlled` constructor must be used. __Note__ same applies to ImageStepper and NumberStepper.
-
-```dart
- import 'package:flutter/material.dart';
 
 import 'stepper.dart';
 
@@ -164,192 +59,280 @@ class IconStepperDemo extends StatefulWidget {
 }
 
 class _IconStepperDemo extends State<IconStepperDemo> {
-  // MUST BE MAINTAINED, SEPARATELY.
-  int currentIndex = 0;
+  // THE FOLLOWING TWO VARIABLES ARE REQUIRED TO CONTROL THE STEPPER.
+  // Controls the currently active step. Can be set to any valid value i.e., a value that ranges from 0 to upperBound.
+  int activeStep = 5; // Initial step set to 5.
 
-  // THESE MUST BE USED TO CONTROL THE STEPPER FROM EXTERNALLY.
-  bool goNext = false;
-  bool goPrevious = false;
+  // Must be used to control the upper bound of the activeStep variable. Please see next button below the build() method!
+  int upperBound = 0;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Icon Stepper Example'),
+          title: Text('IconStepper Example'),
         ),
-        body: Column(
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.blueGrey,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    spreadRadius: 1.0,
-                    blurRadius: 2.0,
-                  )
-                ],
-                // borderRadius: BorderRadius.circular(5.0),
-              ),
-              child: IconStepper.externallyControlled(
-                goNext: goNext,
-                goPrevious: goPrevious,
-                direction: Axis.horizontal,
-                stepColor: Colors.white,
-                activeStepColor: Colors.amber,
-                lineColor: Colors.amberAccent,
-                lineLength: 75,
-                steppingEnabled: true,
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              IconStepper(
                 icons: [
-                  Icon(Icons.home),
-                  Icon(Icons.person),
-                  Icon(Icons.account_balance),
-                  Icon(Icons.access_time),
+                  Icon(Icons.supervised_user_circle),
+                  Icon(Icons.flag),
+                  Icon(Icons.access_alarm),
+                  Icon(Icons.supervised_user_circle),
+                  Icon(Icons.flag),
+                  Icon(Icons.access_alarm),
+                  Icon(Icons.supervised_user_circle),
                 ],
+
+                // activeStep property set to activeStep variable defined above.
+                activeStep: activeStep,
+
+                // bound receives value from upperBound.
+                upperBound: (bound) => upperBound = bound,
+
+                // This ensures step-tapping updates the activeStep. 
+                onStepReached: (index) {
+                  setState(() {
+                    activeStep = index;
+                  });
+                },
               ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(width: 0.1),
-              ),
-              padding: EdgeInsets.all(8.0),
-              alignment: Alignment.centerLeft,
-              child: Text(header()),
-            ),
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.all(5.0),
+              header(),
+              Expanded(
                 child: FittedBox(
                   child: Center(
-                    child: Text('${currentIndex + 1}'),
+                    child: Text('$activeStep'),
                   ),
                 ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                RaisedButton(
-                  onPressed: () {
-                    // MUST TO CONTROL STEPPER FROM EXTERNAL BUTTONS.
-                    setState(() {
-                      goNext = false;
-                      goPrevious = true;
-
-                      if (currentIndex > 0) {
-                        currentIndex--;
-                      }
-                    });
-                  },
-                  child: Text('Previous'),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    // MUST TO CONTROL STEPPER FROM EXTERNAL BUTTONS.
-                    setState(() {
-                      goNext = true;
-                      goPrevious = false;
-
-                      if (currentIndex < 3) {
-                        currentIndex++;
-                      }
-                    });
-                  },
-                  child: Text('Next'),
-                ),
-              ],
-            )
-          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  previousButton(),
+                  nextButton(),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  String header() {
-    switch (currentIndex) {
-      case 0:
-        return 'Educational Background';
+  /// Returns the next button.
+  Widget nextButton() {
+    return ElevatedButton(
+      onPressed: () {
+        // Increment activeStep, when the next button is tapped. However, check for upper bound.
+        if (activeStep < upperBound) {
+          setState(() {
+            activeStep++;
+          });
+        }
+      },
+      child: Text('Next'),
+    );
+  }
 
+  /// Returns the previous button.
+  Widget previousButton() {
+    return ElevatedButton(
+      onPressed: () {
+        // Decrement activeStep, when the previous button is tapped. However, check for lower bound i.e., must be greater than 0.
+        if (activeStep > 0) {
+          setState(() {
+            activeStep--;
+          });
+        }
+      },
+      child: Text('Prev'),
+    );
+  }
+
+  /// Returns the header wrapping the header text.
+  Widget header() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.orange,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              headerText(),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Returns the header text based on the activeStep.
+  String headerText() {
+    switch (activeStep) {
       case 1:
-        return 'Professional Background';
+        return 'Preface';
 
       case 2:
-        return 'Awards';
+        return 'Table of Contents';
 
       case 3:
-        return 'Sports';
+        return 'About the Author';
+
+      case 4:
+        return 'Publisher Information';
+
+      case 5:
+        return 'Reviews';
+
+      case 6:
+        return 'Chapters #1';
 
       default:
-        return 'Unknown';
+        return 'Introduction';
     }
   }
 }
 ```
 
+## ImageStepper
+
+Simple to use image stepper widget, wherein each image defines a step. Hence, the total number of images defines the total number of steps. It is used the same way as the IconStepper; the only difference is that it accepts images instead of icons, as:
+
+```Dart
+ImageStepper(
+    images:[
+        AssetImage('assets/me.jpg'),
+        AssetImage('assets/you.jpg'),
+        AssetImage('assets/star.jpg),
+    ]
+),
+```
+
+## NumberStepper
+
+A simple to use number stepper widget, wherein each number defines a step. Hence, the total count of numbers defines the total number of steps. It is used the same way as the IconStepper; the only difference is that it accepts numbers, i.e., 1, 2, 3, etc., instead of icons, as:
+
+```Dart
+NumberStepper(
+    numbers:[
+        1,
+        2,
+        3,
+        4,
+    ]
+),
+```
+
 ## DotStepper
+
+`DotStepper` contains a family of fully customizable, beautiful __page indicator__ widgets with awesome built-in animations. Each dot in a `DotStepper` represents a step. The example below builds the following DotStepper:
+
+![DotStepper](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/examples/dot_stepper.gif)
+
+In the above `DotStepper,` we have a total of __5__ steps (represented by the 5 dots). The next and previous buttons are used to control stepping forward and backward, respectively. Each step's content can be fully customized, and in this example, it just displays the index of the `activeStep`.
+
+### Code Explanation
+
+In the following code snippet, we must define the `activeStep` variable to control the stepper. The `activeStep` is assigned to the `activeStep` property of the stepper.
+
+Following the `build()` method, we define the next and previous buttons which control the stepper. The next and previous buttons increment and decrement the `activeStep` variable, respectively. However, the incrementing and decrementing is constrained by the `upperBound` and `lowerBound` variables, which is a __must__ for the stepper to function properly.
+
+### Things to remember
+
+- You can set the initial step to any valid value, i.e., values must range from 0 to `dotCount` - 1.
+
+- The `activeStep` MUST start from __0__ and MUST be less than __`dotCount` - 1__.
+
+- `activeStep` can also be used to jump around different steps.
+
+- For tapping to work, ensure tapping is enabled and `activeStep` is set to `tappedDotIndex` in a `setState()` method within the `onDotTapped` callback.
+
+### Code
 
 ```Dart
 import 'package:flutter/material.dart';
 
-import 'package:im_stepper/stepper.dart';
+import 'stepper.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(DotStepperDemo());
 
-class MyApp extends StatefulWidget {
+class DotStepperDemo extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _DotStepperDemo createState() => _DotStepperDemo();
 }
 
-class _MyAppState extends State<MyApp> {
-  bool stepNext = false;
-  bool stepPrevious = false;
+class _DotStepperDemo extends State<DotStepperDemo> {
+  // REQUIRED: USED TO CONTROL THE STEPPER.
+  int activeStep = 0; // Initial step set to 0.
+
+  // OPTIONAL: can be set directly.
+  int dotCount = 5;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Icon Stepper Example'),
+          title: Text('DotStepper Example'),
         ),
-        body: SafeArea(
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
+              DotStepper(
+                // direction: Axis.vertical,
+                dotCount: dotCount,
+                dotRadius: 12,
+
+                /// THIS MUST BE SET. SEE HOW IT IS CHANGED IN NEXT/PREVIOUS BUTTONS AND JUMP BUTTONS.
+                activeStep: activeStep,
+                shape: Shape.stadium,
+                spacing: 10,
+                indicator: Indicator.shift,
+
+                /// TAPPING WILL NOT FUNCTION PROPERLY WITHOUT THIS PIECE OF CODE.
+                onDotTapped: (tappedDotIndex) {
+                  setState(() {
+                    activeStep = tappedDotIndex;
+                  });
+                },
+
+                // DOT-STEPPER DECORATIONS
+                fixedDotDecoration: FixedDotDecoration(
+                  color: Colors.red,
+                ),
+
+                indicatorDecoration: IndicatorDecoration(
+                  // style: PaintingStyle.stroke,
+                  // strokeWidth: 8,
+                  color: Colors.deepPurple,
+                ),
+                lineConnectorDecoration: LineConnectorDecoration(
+                  color: Colors.red,
+                  strokeWidth: 0,
+                ),
+              ),
+
+              /// Jump buttons.
+              Padding(padding: const EdgeInsets.all(18.0), child: steps()),
+
+              // Next and Previous buttons.
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        // ***DON'T FORGET***
-                        stepNext = false;
-                        stepPrevious = true;
-                      });
-                    },
-                    icon: Icon(Icons.chevron_left),
-                  ),
-                  DotStepper(
-                    goNext: stepNext,
-                    goPrevious: stepPrevious,
-                    dotCount: 5,
-                    indicatorEffect: IndicatorEffect.jump,
-                    // indicatorType: IndicatorType.contain,
-                    // direction: Axis.vertical,
-                    // dotRadius: 150,
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        // ***DON'T FORGET***
-                        stepPrevious = false;
-                        stepNext = true;
-                      });
-                    },
-                    icon: Icon(Icons.chevron_right),
-                  )
-                ],
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [previousButton(), nextButton()],
               )
             ],
           ),
@@ -357,92 +340,91 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+
+  /// Generates jump steps for dotCount number of steps, and returns them in a row.
+  Row steps() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: List.generate(dotCount, (index) {
+        return ElevatedButton(
+          child: Text('${index + 1}'),
+          onPressed: () {
+            setState(() {
+              activeStep = index;
+            });
+          },
+        );
+      }),
+    );
+  }
+
+  /// Returns the next button widget.
+  Widget nextButton() {
+    return ElevatedButton(
+      child: Text('Next'),
+      onPressed: () {
+        /// ACTIVE STEP MUST BE CHECKED FOR (dotCount - 1) AND NOT FOR dotCount To PREVENT Overflow ERROR.
+        if (activeStep < dotCount - 1) {
+          setState(() {
+            activeStep++;
+          });
+        }
+      },
+    );
+  }
+
+  /// Returns the previous button widget.
+  Widget previousButton() {
+    return ElevatedButton(
+      child: Text('Prev'),
+      onPressed: () {
+        // activeStep MUST BE GREATER THAN 0 TO PREVENT OVERFLOW.
+        if (activeStep > 0) {
+          setState(() {
+            activeStep--;
+          });
+        }
+      },
+    );
+  }
 }
 ```
 
-## ImageStepper
+### DotStepper Customizations
+
+Following are some of the ways you can play with the DotStepper decorations to customize the DotStepper even further as per your requirements:-
+
+![Customization1](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/others/customization1.gif)
 
 ```Dart
-import 'package:flutter/material.dart';
-
-
-import 'package:im_stepper/stepper.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatefulWidget {
-  // This widget is the root of your application.
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  int selectedIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Icon Stepper Example'),
-        ),
-        body: ImageStepper(
-          // direction: Axis.vertical,
-          // stepRadius: 48.0,
-          activeStepBorderPadding: 20.0,
-          images: [
-            AssetImage('assets/me.jpg'),
-            AssetImage('assets/me.jpg'),
-            AssetImage('assets/me.jpg'),
-            AssetImage('assets/me.jpg'),
-            AssetImage('assets/me.jpg'),
-            AssetImage('assets/me.jpg'),
-            AssetImage('assets/me.jpg'),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// DOT-STEPPER DECORATIONS
+  fixedDotDecoration: FixedDotDecoration(
+    color: Colors.blueGrey,
+  ),
+  indicatorDecoration: IndicatorDecoration(
+    color: Colors.deepOrange,
+    style: PaintingStyle.stroke,
+    strokeWidth: 10
+  ),
+  lineConnectorDecoration: LineConnectorDecoration(
+    color: Colors.red,
+  ),
 ```
 
-## NumberStepper
+![Customization2](https://github.com/imujtaba8488/showcase/blob/master/im_stepper/dot_stepper/others/customization2.gif)
 
-```dart
-import 'package:flutter/material.dart';
-
-import 'package:im_stepper/stepper.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatefulWidget {
-  // This widget is the root of your application.
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  int selectedIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Icon Stepper Example'),
-        ),
-        body: NumberStepper(
-          // stepRadius: 48.0,
-          numbers: [1, 2, 3, 4, 5, 6],
-          direction: Axis.vertical,
-          numberStyle: TextStyle(color: Colors.white),
-        ),
-      ),
-    );
-  }
-}
+```Dart
+  fixedDotDecoration: FixedDotDecoration(
+    color: Colors.orange[400],
+    strokeColor: Colors.green,
+    strokeWidth: 19,
+  ),
+  indicatorDecoration: IndicatorDecoration(
+    color: Colors.black,
+  ),
+  lineConnectorDecoration: LineConnectorDecoration(
+    color: Colors.red,
+  ),
 ```
+
+[Back To Top](#examples---table-of-contents)
