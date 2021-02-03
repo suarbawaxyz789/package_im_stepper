@@ -41,6 +41,7 @@ class _OpacityAnimatedState extends State<OpacityAnimated>
       end: widget.end,
     ).animate(_animationController);
 
+    return widget.child;
     return Opacity(
       opacity: widget.animationDisabled ? widget.end : _opacity.value,
       child: widget.child,
